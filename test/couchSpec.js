@@ -1,5 +1,5 @@
 var url = 'http://localhost:5984/foobar';
-var init = require('../db/init')(url);
+var init = require('couch-init')(url);
 var couchDb = require('../');
 var assert = require('assert');
 var nock = require('nock');

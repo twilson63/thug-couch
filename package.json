@@ -1,6 +1,6 @@
 {
   "name": "thug-couch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An add-on module to use couchdb as a document db for Thug models",
   "main": "index.js",
   "directories": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "request": "~2.12.0",
-    "inflection": "~1.2.3"
+    "couch-init": "0.0.2"
   },
   "devDependencies": {
     "nock": "~0.14.2",
