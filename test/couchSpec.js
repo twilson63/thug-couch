@@ -40,6 +40,10 @@ nock('http://localhost:5984')
   .put('/foobar/f117b2de7f4010634606845a4700061d', '{"title":"Awesome Post","body":"TL DR","docType":"post","author":"foo@bar.com","_id":"f117b2de7f4010634606845a4700061d","_rev":"2-d9a5be454198018e6ebc2cb90e263c29","_deleted":true}')
   .reply(200, "{\"_id\":\"f117b2de7f4010634606845a4700061d\",\"_rev\":\"2-d9a5be454198018e6ebc2cb90e263c29\"}\n");
 
+nock('http://localhost:5984')
+  .post('/foobar/_design/posts/_view/author', "{\"keys\":[\"foo@bar.com\"]}")
+  .reply(200, "{\"total_rows\":1,\"offset\":0,\"rows\":[\r\n{\"id\":\"f117b2de7f4010634606845a4700142e\",\"key\":\"foo@bar.com\",\"value\":{\"_id\":\"f117b2de7f4010634606845a4700142e\",\"_rev\":\"1-975e567ab4207ce03e07bd560f27f02f\",\"title\":\"Awesome Post\",\"body\":\"TL DR\",\"docType\":\"post\",\"author\":\"foo@bar.com\"}}\r\n]}\n");
+
 describe('couchDb', function() {
   var db = couchDb(url);
   var result = null;
@@ -76,6 +80,12 @@ describe('couchDb', function() {
   it('should remove from db', function(done){
     db.remove(result._id, result, function(doc){
       assert.ok(doc === null, 'remove from db');
+      done();
+    });
+  });
+  it('should find one doc from db', function(done){
+    db.findByView('posts', 'author', ['foo@bar.com'], function(posts) {
+      assert.ok(posts[0].author === 'foo@bar.com');
       done();
     });
   });
