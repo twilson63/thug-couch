@@ -18,6 +18,7 @@ module.exports = function(db) {
       if (id === "new") { url = db; method = 'post'; }
       request(url, { json: doc, method: method }, function(e,r,b){
         if (e) { cb(e); return; }
+        if (b.error) { cb(b); return;} // report doc conflict..
         if (b.ok) {
           doc._id = b.id;
           doc._rev = b.rev;
