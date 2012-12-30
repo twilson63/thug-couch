@@ -8,6 +8,10 @@ Thug is a functional model system for nodejs, this module is an add-on module of
 
 > Thug was created to minimize the complexity of validating and altering an object before writing it to a data store or performing an operation. Thug is not an ORM but is ment to be a replacment for one. Thug is very small and works on both the server or in a browser.
 
+## What is thug-couch?
+
+The thug-couch module was constructed to remove any persistent specific functionality from the actual thug model.  ThugCouch implements the three primary thug constructors (read, write, remove) to a couchDb backend.  Then it goes on to support a couple of api methods that make customizing your models easier.
+
 ## Install
 
 ```
@@ -25,7 +29,7 @@ var couch = require('thug-couch');
 module.exports = function(config) {
   var post = new Thug({
     "methods": {
-      all: function(cb) { db.all('post', cb); }
+      all: function(cb) { db.all('posts', cb); }
     }
   });
 
@@ -39,13 +43,60 @@ module.exports = function(config) {
 }
 ```
 
-## Couch API
+## ThugCouch API
 
 ### `read(id, callback)`
+
+Implemented to Thug Specs.
+
 ### `write(id, doc, callback)`
+
+Implemented to Thug Specs.
+
 ### `remove(field, defaultValue)`
-### `all(callback)`
-### `findOne(view, action, value, callback)`
+
+Implemented to Thug Specs.
+
+### `all([params], callback)`
+
+Example:
+
+``` javascript
+var db = couchDb('http://localhost:5984/db');
+var post = new Thug({
+  "methods": {
+	all: function(cb) { db.all('posts', cb); }
+  }
+});
+```
+
+### `findOne(view, action, value, [params], callback)`
+
+Example:
+
+``` javascript
+var db = couchDb('http://localhost:5984/db');
+var user = new Thug({
+  "methods": {
+	byEmail: function(email, cb) { db.findOne('user', 'email', email, cb); }
+  }
+});
+```
+
+
+### `findByView(view, action, keys, [params], callback)`
+
+Example:
+
+``` javascript
+var db = couchDb('http://localhost:5984/db');
+var user = new Thug({
+  "methods": {
+	byRoles: function(roles, cb) { db.findByView('users', 'roles', roles, cb); }
+  }
+});
+```
+
 
 ## LICENSE
 
