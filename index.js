@@ -35,7 +35,7 @@ module.exports = function(db) {
     },
     findOne: function(view, action, value, cb) {
       request.post([db, '_design', view, '_view', action].join('/'), {json: {keys: [value]}}, function(e,r,b) {
-        if (b.rows[0]) { return cb(b.rows[0].value); }
+        if (b.rows && b.rows[0]) { return cb(b.rows[0].value); }
         cb(null);
       });
     },
