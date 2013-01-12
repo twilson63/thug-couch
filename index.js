@@ -42,15 +42,20 @@ module.exports = function(db) {
     all: function(view, cb) {
       request([db, '_design', view, '_view', 'all'].join('/'), {json: true}, function(e,r,b) {
         if (e) { return cb(null); }
-        cb(b.rows.map(function(item) { return item.value; }));
+        var docs = [];
+        if (b.rows) {
+          docs = b.rows.map(function(item) { return item.value; });
+        }
+        cb(docs);
       });
     },
     findByView: function(view, action, keys, cb) {
       request.post([db, '_design', view, '_view', action].join('/'), {json: {keys: keys}}, function(e,r,b) {
         if (e) { console.log(e); return cb(null); }
-        var docs = b.rows.map(function(item) {
-          return item.value;
-        });
+        var docs = [];
+        if (b.rows) {
+          docs = b.rows.map(function(item) { return item.value; });
+        }
         cb(docs);
       });
     }
