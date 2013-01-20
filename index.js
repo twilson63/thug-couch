@@ -1,4 +1,6 @@
 var request = require('request');
+var JSONStream = require('JSONStream');
+var es = require('event-stream');
 
 module.exports = function(db) {
   return {
@@ -40,24 +42,22 @@ module.exports = function(db) {
       });
     },
     all: function(view, cb) {
-      request([db, '_design', view, '_view', 'all'].join('/'), {json: true}, function(e,r,b) {
-        if (e) { return cb(null); }
-        var docs = [];
-        if (b.rows) {
-          docs = b.rows.map(function(item) { return item.value; });
-        }
-        cb(docs);
-      });
+      var url = [db, '_design', view, '_view', 'all'].join('/');
+      var stream = es.pipeline(
+        request(url, {json: true}),
+        JSONStream.parse(['rows', true]),
+        es.stringify()
+      );
+      cb(stream);
     },
     findByView: function(view, action, keys, cb) {
-      request.post([db, '_design', view, '_view', action].join('/'), {json: {keys: keys}}, function(e,r,b) {
-        if (e) { console.log(e); return cb(null); }
-        var docs = [];
-        if (b.rows) {
-          docs = b.rows.map(function(item) { return item.value; });
-        }
-        cb(docs);
-      });
+      var url = [db, '_design', view, '_view', action].join('/');
+      var stream = es.pipeline(
+        request.post(url, {json: {keys: keys}}),
+        JSONStream.parse(['rows', true, 'value']),
+        es.stringify()
+      )
+      cb(stream);
     }
   }
 }

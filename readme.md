@@ -59,6 +59,9 @@ Implemented to Thug Specs.
 
 ### `all([params], callback)`
 
+The `all` method returns back a stream object as the
+first parameter in the callback
+
 Example:
 
 ``` javascript
@@ -85,6 +88,9 @@ var user = new Thug({
 
 
 ### `findByView(view, action, keys, [params], callback)`
+
+The `findByView` method returns back a `stream` object as the
+first parameter in the callback
 
 Example:
 

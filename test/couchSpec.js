@@ -1,6 +1,7 @@
 var url = 'http://localhost:5984/foobar';
 var init = require('couch-init')(url);
 var couchDb = require('../');
+var es = require('event-stream');
 var assert = require('assert');
 var nock = require('nock');
 
@@ -67,8 +68,10 @@ describe('couchDb', function() {
   });
   it('should get all docs from db', function(done){
     db.all('posts', function(posts) {
-      assert.ok(posts.length > 0);
-      done();
+      posts.pipe(es.writeArray(function(err, array){
+        assert.ok(array.length > 0);
+        done();
+      }));
     });
   });
   it('should find one doc from db', function(done){
@@ -85,8 +88,13 @@ describe('couchDb', function() {
   });
   it('should find one doc from db', function(done){
     db.findByView('posts', 'author', ['foo@bar.com'], function(posts) {
-      assert.ok(posts[0].author === 'foo@bar.com');
-      done();
+      posts.pipe(es.writeArray(function(err, array){
+        var post = JSON.parse(array[0]);
+        assert.ok(post.author === 'foo@bar.com');
+        done();
+      }));
+      //assert.ok(posts[0].author === 'foo@bar.com');
+      
     });
   });
   after(function(done){
