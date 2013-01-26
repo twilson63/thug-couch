@@ -69,6 +69,7 @@ describe('couchDb', function() {
   it('should get all docs from db', function(done){
     db.all('posts', function(posts) {
       posts.pipe(es.writeArray(function(err, array){
+        console.log(array);
         assert.ok(array.length > 0);
         done();
       }));

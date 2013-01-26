@@ -45,7 +45,7 @@ module.exports = function(db) {
       var url = [db, '_design', view, '_view', 'all'].join('/');
       var stream = es.pipeline(
         request(url, {json: true}),
-        JSONStream.parse(['rows', true]),
+        JSONStream.parse(['rows', true, 'value']),
         es.stringify()
       );
       cb(stream);
