@@ -1,6 +1,6 @@
 {
   "name": "thug-couch",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "An add-on module to use couchdb as a document db for Thug models",
   "main": "index.js",
   "directories": {
@@ -13,7 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "request": "~2.12.0",
-    "JSONStream": "~0.4.3"
+    "JSONStream": "~0.4.3",
+    "event-stream": "3.0.11"
   },
   "devDependencies": {
     "nock": "~0.14.2",
