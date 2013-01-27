@@ -19,7 +19,7 @@ nock('http://localhost:5984')
 
 nock('http://localhost:5984')
   .get('/foobar/_design/posts/_view/all')
-  .reply(200, "{\"total_rows\":1,\"offset\":0,\"rows\":[{\"title\":\"Awesome Post\",\"body\":\"TL DR\",\"docType\":\"post\",\"author\":\"foo@bar.com\"}]}\n");
+  .reply(200, "{\"total_rows\":1,\"offset\":0,\"rows\":[{\"key\":\"key\", \"value\": {\"title\":\"Awesome Post\",\"body\":\"TL DR\",\"docType\":\"post\",\"author\":\"foo@bar.com\"}}]}\n");
 
 nock('http://localhost:5984')
   .post('/foobar/_design/posts/_view/author', "{\"keys\":[\"foo@bar.com\"]}")
@@ -69,7 +69,6 @@ describe('couchDb', function() {
   it('should get all docs from db', function(done){
     db.all('posts', function(posts) {
       posts.pipe(es.writeArray(function(err, array){
-        console.log(array);
         assert.ok(array.length > 0);
         done();
       }));
@@ -87,7 +86,7 @@ describe('couchDb', function() {
       done();
     });
   });
-  it('should find one doc from db', function(done){
+  it('should find docs by view', function(done){
     db.findByView('posts', 'author', ['foo@bar.com'], function(posts) {
       posts.pipe(es.writeArray(function(err, array){
         var post = JSON.parse(array[0]);
